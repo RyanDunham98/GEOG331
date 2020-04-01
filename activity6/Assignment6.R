@@ -229,7 +229,28 @@ g2015p@data$NDVI_mean_change <- mean_change[,"mean"]
 spplot(g2015p, "NDVI_mean_change")
 
 #Q11
+#gets average NDVI from all years
+avg_NDVI <- calc(NDVIstack, fun = mean)
 
+meanNDVI <- zonal(avg_NDVI, #NDVI function to summarize
+                  glacZones,#raster with zones
+                  "mean")#function to apply
 
+meanNDVI <- meanNDVI[-c(1), ] 
+g2015p@data$NDVImean <- meanNDVI
 
-#Q11
+plot(avg_NDVI)
+#plot(glacZones, add=TRUE,border=FALSE)
+g2015p@data$NDVIcol <- (if(g2015p@data$NDVImean<0.1){"blue"}
+                        if(g2015p@data$NDVImean<0.2 && g2015p@data$NDVImean>= 0.1){"red"}
+                        if(g2015p@data$NDVImean<0.3 && g2015p@data$NDVImean>= 0.2){"green"}
+                        if(g2015p@data$NDVImean<0.4 && g2015p@data$NDVImean>= 0.3){"yellow"}
+                        if(g2015p@data$NDVImean<0.5 && g2015p@data$NDVImean>= 0.4){"orange"}
+                        if(g2015p@data$NDVImean<0.6 && g2015p@data$NDVImean>= 0.5){"purple"}
+                        if(g2015p@data$NDVImean<0.7 && g2015p@data$NDVImean>= 0.6){"black"}
+                        if(g2015p@data$NDVImean<0.8 && g2015p@data$NDVImean>= 0.7){"white"}
+                        if(g2015p@data$NDVImean<0.9 && g2015p@data$NDVImean>= 0.8){"pink"}
+                        if(g2015p@data$NDVImean<1 && g2015p@data$NDVImean>= 0.9){"brown"})
+                        
+plot(g2015p, add=TRUE, col=paste(g2015p@data$NDVIcol),border=FALSE)
+                        
